@@ -1,0 +1,45 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main.html"
+      xmlns:width="http://www.w3.org/1999/xhtml">
+
+<div layout:fragment="todo">
+    <div th:if = "${task!=null}" class="container mt-3">
+        <form action="/edit" method="post">
+            <input type="hidden" th:value="${task.id}" name="task_id">
+        <div class="row">
+            <div class="col-8"><h3>Task Name:</h3></div>
+        </div>
+        <div class="row mt-3">
+        <div class="col-12"><input th:value = "${task.name}" name="task_name"></div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-8"><h3>Task deadline:</h3></div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12"><input type="date" th:value = "${task.deadlineDate}" name="task_date"></div>
+        </div>
+            <div class="row mt-3">
+                <div class="col-8"><h3>Completed?</h3></div>
+            </div>
+            <div class="row">
+                <div class="col-3 mb-2">
+                <select name="completed">
+                    <option value="false">
+                        No
+                    </option>
+                    <option value="true">
+                        Yes
+                    </option>
+                </select> </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-3">
+                <button type="submit" class="btn btn-primary">Edit</button>
+                <a th:href="@{'/delete/' + ${task.id}}" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+</html>
