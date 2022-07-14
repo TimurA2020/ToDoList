@@ -1,49 +1,39 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main.html">
 <div layout:fragment="todo">
-<button id="addTask" class="btn btn-primary btn-sm mt-3" style="margin-left: 10%">Add Task</button>
-<table class="table table-hover" style="width: 80%; margin: auto">
-    <thead>
-    <tr>
-        <th scope="col" style="width: 10%">ID</th>
-        <th scope="col" style="width: 40%">Task</th>
-        <th scope="col" style="width: 20%">Deadline</th>
-        <th scope="col" style="width: 15%">Completed?</th>
-        <th scope="col" style="width: 15%">Details</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each = "tk : ${tasks}">
-        <th scope="row" th:text="${tk.id}"></th>
-        <td th:text="${tk.name}"></td>
-        <td th:text="${tk.deadlineDate}"></td>
-        <td th:text="${tk.isCompleted}"></td>
-        <td><a th:href="@{'/details/' + ${tk.id}}" class="btn btn-success">Details</a></td>
-    </tr>
-    </tbody>
-</table>
+<button id="addTask" class="btn btn-primary btn-sm mt-3" style="margin-left: 16%">Add Folder</button>
+    <div class="container-r">
+        <div class="folder" th:each = "folder : ${folders}">
+            <h2 class="name" th:text="${folder.name}"></h2>
+            <div class="options">
+                <a th:href="@{'/folderdetails/' + ${folder.id}}" class="btn btn-warning btn-sm">Details</a>
+            </div>
+        </div>
+    </div>
 
 <div class="popup">
     <div class="popup__container">
         <div class="popup__wrapper">
             <div class="myForm">
-                <form role="form" action="/addtask" autocomplete="off" method="POST">
-                    <h1>Add Task</h1>
-                    <p>Task name</p>
-                    <input type="text" placeholder="Enter task name" name="task_name" required><br>
-                    <p>Deadline</p>
-                    <input type="date" name="task_date" required>
-                    <button type="button" class="btn cancel">Close</button>
-                    <button type="submit" class="btn">Add task</button>
+                <form role="form" action="/addfolder" autocomplete="off" method="POST">
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <label>Folder name:</label>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-12">
+                            <input placeholder="Enter your folder's name" class="form-control" type="text" name="folder_name" required>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary cancel">Close</button>
+                    <button type="submit" class="btn btn-success">Add Folder</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-
 </div>
-</body>
-</html>
 </body>
 </html>

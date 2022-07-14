@@ -3,43 +3,106 @@
       xmlns:width="http://www.w3.org/1999/xhtml">
 
 <div layout:fragment="todo">
-    <div th:if = "${task!=null}" class="container mt-3">
-        <form action="/edit" method="post">
-            <input type="hidden" th:value="${task.id}" name="task_id">
-        <div class="row">
-            <div class="col-8"><h3>Task Name:</h3></div>
-        </div>
-        <div class="row mt-3">
-        <div class="col-12"><input th:value = "${task.name}" name="task_name"></div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-8"><h3>Task deadline:</h3></div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-12"><input type="date" th:value = "${task.deadlineDate}" name="task_date"></div>
-        </div>
+    <div th:if = "${task!=null}" class="container mt-3 m-15">
+        <div class="left-side">
+        <form action="/edittask" method="post">
             <div class="row mt-3">
-                <div class="col-8"><h3>Completed?</h3></div>
+                <div class="col-12">
+                    <label>Full name:</label>
+                </div>
             </div>
-            <div class="row">
-                <div class="col-3 mb-2">
-                <select name="completed">
-                    <option value="false">
-                        No
-                    </option>
-                    <option value="true">
-                        Yes
-                    </option>
-                </select> </div>
+            <div class="row mt-1">
+                <div class="col-12">
+                    <input class="form-control" th:value = "${task.title}" name="task_title">
+                    <input type="hidden" th:value="${task.id}" name="task_id">
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <label>Status:</label>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-12">
+                    <select class="form-select" name="status">
+                        <option value="0" th:selected="${task.status == 0}">TO DO</option>
+                        <option value="1" th:selected="${task.status == 1}">In Progress</option>
+                        <option value="2" th:selected="${task.status == 2}">Done</option>
+                        <option value="3" th:selected="${task.status == 3}">Failed</option>
+                    </select>
+                </div>
             </div>
             <div class="row mt-2">
-                <div class="col-3">
-                <button type="submit" class="btn btn-primary">Edit</button>
-                <a th:href="@{'/delete/' + ${task.id}}" class="btn btn-danger">Delete</a>
+                <div class="col-12">
+                    <label>Description:</label>
+                </div>
+            </div>
+            <div class="row" mt-1>
+                <div class="col-12">
+                    <textarea th:text="${task.description}" rows="5" type="text" name="task_description" class="form-control" required></textarea>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-6">
+                    <button type="submit" class="btn btn-primary">Edit</button>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</button>
                 </div>
             </div>
         </form>
+            <div>
+            <form action="/addcomment" method="post">
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>Add comment:</label>
+                    </div>
+                </div>
+                <div class="row" mt-1>
+                    <div class="col-12">
+                        <textarea placeholder="Comment" rows="5" type="text" name="comment" class="form-control" required></textarea>
+                        <input type="hidden" th:value="${task.id}" name="task_id">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-primary">Add Comment</button>
+                    </div>
+                </div>
+            </form>
+            </div>
     </div>
+
+<div class="right-side">
+    <div class="comment" th:each="comment : ${comments}">
+        <div style="display: flex; ">
+            <div><h6 style="margin-left: 10px; line-height: 50px" th:text="${comment.comment}"></h6></div>
+        </div>
+        <hr>
+    </div>
+</div>
+</div>
+    <!-- Delete task Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <form action="/deletetask" method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 th:text="'Are you sure you want to delete ' + ${task.title.toLowerCase()} + '?'"></h4>
+                    <input type="hidden" th:value="${task.id}" name="task_id">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+
+
 </div>
 
 </html>
