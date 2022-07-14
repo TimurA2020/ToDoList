@@ -112,6 +112,7 @@ public class HomeController {
     @PostMapping(value = "/deletetask")
     public String deleteTask(@RequestParam(name = "task_id") Long task_id){
         Task task = taskRepo.getReferenceById(task_id);
+        commentRepo.deleteByTask(task_id);
         taskRepo.deleteById(task_id);
         return "redirect:/folderdetails/" + task.getFolder().getId();
     }

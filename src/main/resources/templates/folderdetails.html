@@ -1,0 +1,116 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main.html">
+<div layout:fragment="todo">
+    <div class="container-r">
+        <div class="folder folder-xl" th:if="${folder!=null}">
+            <h2 class="name" th:text="${folder.name}"></h2>
+            <div class="options">
+                <a th:href="@{'/'}" class="btn btn-warning btn-sm">All Folders</a>
+                <form action="/deletefolder" method="post">
+                    <input type="hidden" th:value="${folder.id}" name="folder_id">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <button id="addTask" class="btn btn-primary btn-sm mt-3" style="margin-left: 15%">Add Task</button>
+    <button class="btn btn-primary btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-left: 3px">Add Category</button>
+    <form action="/deletecategory" method="post" th:each="category : ${folder.taskCategories}" style="margin:0; padding:0; display: inline">
+    <input type="hidden" th:value="${folder.id}" name="folder_id">
+        <input type="hidden" th:value="${category.id}" name="category_id">
+        <button type="submit" class="btn btn-warning btn-sm"  th:text="${category.name} + ' x'" style="display: inline"></button>
+    </form>
+        <!--    popup for tasks-->
+        <div class="popup">
+            <div class="popup__container">
+                <div class="popup__wrapper">
+                    <div class="myForm">
+                        <form role="form" action="/addtask" autocomplete="off" method="POST">
+                            <input type="hidden" name="folder_id" th:value="${folder.id}">
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <label>Task name:</label>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-12">
+                                    <input th:placeholder="'Enter your ' + ${folder.name.toLowerCase().substring(0, folder.name.length()-1)}" class="form-control" type="text" name="task_title" required>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <label>Task description:</label>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-12">
+                                    <textarea th:placeholder="'Enter your ' + ${folder.name.toLowerCase().substring(0, folder.name.length()-1)} + '\'s description '" class="form-control" rows="5" type="text" name="task_description" required></textarea>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary cancel">Close</button>
+                            <button type="submit" class="btn btn-success">Add task</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--    popup end-->
+<!--    popup task categories-->
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form role="form" action="/addcategory" autocomplete="off" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Task Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                        <input type="hidden" name="folder_id" th:value="${folder.id}">
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <label>Task name:</label>
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-12">
+                                <input th:placeholder="'Enter your ' + ${folder.name.toLowerCase().substring(0, folder.name.length()-1)} + ' category'" class="form-control" type="text" name="category_name" required>
+                                <input type="hidden" name="folder_id" th:value="${folder.id}">
+                            </div>
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Category</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<!--    tasks table-->
+    <div style="margin-left: 15%; margin-right: 15%;">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col" width="50%">Task Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">Details</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        <tr th:each="task : ${tasks}">
+            <th scope="row" th:text="${task.id}"></th>
+            <td th:text="${task.title}"></td>
+            <td th:text="${task.getStatus(task.status)}" th:style="'color: ' + ${task.getColor(task.status)} + ';font-weight: bold;'" ></td>
+            <td><a th:href="'/details/' + ${task.id}" class="btn btn-primary">Details</a></td>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
+</body>
+</html>
