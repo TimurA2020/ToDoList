@@ -78,6 +78,13 @@ public class HomeController {
 
     @PostMapping(value = "/deletefolder")
     public String deletefolder(@RequestParam(name = "folder_id") Long id){
+        List<Task> tasks = taskRepo.findByFolder_Id(id);
+        Long task_id = Long.valueOf(-123);
+        for(int i = 0; i < tasks.size(); i++){
+            task_id = tasks.get(i).getId();
+            commentRepo.deleteByTask(task_id);
+        }
+        taskRepo.deleteByFolder(id);
         folderRepo.deleteById(id);
         return "redirect:/";
     }
